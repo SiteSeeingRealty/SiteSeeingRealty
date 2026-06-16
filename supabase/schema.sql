@@ -14,7 +14,10 @@ CREATE TABLE IF NOT EXISTS public.plots (
     image TEXT,
     gallery TEXT[],
     description TEXT,
-    documents TEXT[]
+    documents TEXT[],   -- uploaded document-image URLs
+    fb_url TEXT,
+    insta_url TEXT,
+    maps_url TEXT
 );
 
 -- Explicitly expose the table to the Data API (PostgREST / supabase-js).

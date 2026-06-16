@@ -21,13 +21,13 @@
 }
 
 :root {
-  --c1: #ffffff;
-  --c2: #ffffff;
-  --c3: #7ac5e2;
-  --c4: #7ac5e2;
+  --c1: #000000;
+  --c2: #000000;
+  --c3: #aaddf2;
+  --c4: #aaddf2;
   --c5: #ffffff;
-  --g1: linear-gradient(180deg, #7ac5e2 0%, #ffffff 99.48%);
-  --g2: linear-gradient(180deg, #7ac5e2 18.75%, #ffffff 99.48%);
+  --g1: linear-gradient(180deg, #aaddf2 0%, #ffffff 99.48%);
+  --g2: linear-gradient(180deg, #aaddf2 18.75%, #ffffff 99.48%);
   --h1: clamp(40px, 6.6vw, 128px);
   --h2: clamp(32px, 5vw, 96px);
   --high: clamp(32px, 5vw, 96px);
@@ -306,6 +306,10 @@ h2 {
 
 .header-phone {
   margin-left: clamp(20px, 1.875vw, 36px);
+  font-size: clamp(18px, 1.25vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .header-nav li {
@@ -511,6 +515,23 @@ h2 {
   opacity: 1;
   visibility: visible;
   transform: translateY(0%);
+}
+
+/* Hero text/buttons stay white over the dark banner image */
+.banner-block,
+.banner-block h1,
+.banner-block .subheading {
+  color: #ffffff;
+}
+
+.banner-block .button {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.banner-block .button:hover {
+  color: var(--c4);
+  background: #ffffff;
 }
 
 .banner-block h1 {
@@ -1495,6 +1516,23 @@ h2 {
   z-index: -1;
 }
 
+/* Property hero text/buttons stay white over the dark hero image */
+.pd-hero .holder,
+.pd-hero h1,
+.pd-meta {
+  color: #ffffff;
+}
+
+.pd-hero .button {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.pd-hero .button:hover {
+  color: var(--c4);
+  background: #ffffff;
+}
+
 .pd-hero h1 {
   text-align: left;
   margin: 0 0 10px;
@@ -1506,7 +1544,6 @@ h2 {
   opacity: 0.8;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--c2);
 }
 
 .back-btn {
@@ -2681,5 +2718,77 @@ h2 {
 
   .slider-arrows {
     display: none;
+  }
+}
+
+/* ===== FLOATING WHATSAPP BUTTON ===== */
+.wa-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.wa-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.3);
+}
+
+.wa-fab svg {
+  width: 34px;
+  height: 34px;
+  fill: #ffffff;
+}
+
+/* ===== PROPERTY SOCIAL LINKS ===== */
+.pd-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.pd-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--c2);
+  padding: 8px 14px;
+  border: 1px solid var(--c2);
+  border-radius: 999px;
+  transition: opacity .2s ease;
+}
+
+.pd-social-link:hover {
+  opacity: 0.7;
+}
+
+.pd-social-link svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+@media (max-width: 600px) {
+  .wa-fab {
+    width: 52px;
+    height: 52px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .wa-fab svg {
+    width: 30px;
+    height: 30px;
   }
 }

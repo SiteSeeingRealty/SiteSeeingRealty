@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { useProperties } from '../context/PropertyContext';
 import { supabase } from '../supabaseClient';
 
+// Property types. "Site" replaces the old "Plot" label.
+export const PROPERTY_TYPES = ['Site', 'Villa', 'Apartment', 'Agricultural Land', 'Farmland', 'Rent'];
+
 const EMPTY_FORM = {
-  title: '', type: 'Plot', city: '', size: '', price: '',
-  lat: '', lng: '', image: '', description: '', gallery: []
+  title: '', type: 'Site', city: '', size: '', price: '',
+  lat: '', lng: '', image: '', description: '', gallery: [],
+  documents: [], fb_url: '', insta_url: '', maps_url: ''
 };
 
 const DEFAULT_CITIES = ['Mysore', 'Bangalore'];
@@ -20,6 +24,7 @@ export default function Dashboard() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageFile, setImageFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
+  const [documentFiles, setDocumentFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [addingCity, setAddingCity] = useState(false);
   const [tab, setTab] = useState('properties');
@@ -101,6 +106,12 @@ export default function Dashboard() {
         gallery = [...gallery, ...uploaded];
       }
 
+      let documents = [...(form.documents || [])];
+      if (documentFiles.length > 0) {
+        const uploaded = await Promise.all(documentFiles.map(uploadImage));
+        documents = [...documents, ...uploaded];
+      }
+
       const payload = {
         title: form.title,
         type: form.type,
@@ -112,7 +123,10 @@ export default function Dashboard() {
         lng: parseFloat(form.lng),
         image: imageUrl,
         gallery,
-        documents: []
+        documents,
+        fb_url: form.fb_url.trim(),
+        insta_url: form.insta_url.trim(),
+        maps_url: form.maps_url.trim()
       };
 
       if (editingId) {
@@ -133,6 +147,7 @@ export default function Dashboard() {
     setForm(EMPTY_FORM);
     setImageFile(null);
     setGalleryFiles([]);
+    setDocumentFiles([]);
     setAddingCity(false);
   };
 
@@ -141,7 +156,7 @@ export default function Dashboard() {
     setAddingCity(false);
     setForm({
       title: p.title || '',
-      type: p.type || 'Plot',
+      type: PROPERTY_TYPES.includes(p.type) ? p.type : (p.type === 'Plot' ? 'Site' : 'Site'),
       city: p.city || '',
       size: p.size || '',
       price: p.price || '',
@@ -149,15 +164,24 @@ export default function Dashboard() {
       lng: p.lng ?? '',
       image: p.image || '',
       description: p.description || '',
-      gallery: Array.isArray(p.gallery) ? p.gallery : []
+      gallery: Array.isArray(p.gallery) ? p.gallery : [],
+      documents: Array.isArray(p.documents) ? p.documents : [],
+      fb_url: p.fb_url || '',
+      insta_url: p.insta_url || '',
+      maps_url: p.maps_url || ''
     });
     setImageFile(null);
     setGalleryFiles([]);
+    setDocumentFiles([]);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const removeExistingGalleryImage = (url) => {
     setForm((f) => ({ ...f, gallery: f.gallery.filter((g) => g !== url) }));
+  };
+
+  const removeExistingDocument = (url) => {
+    setForm((f) => ({ ...f, documents: f.documents.filter((d) => d !== url) }));
   };
 
   const handleDelete = async (p) => {
@@ -250,9 +274,7 @@ export default function Dashboard() {
               <label>
                 <span>Type</span>
                 <select required value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-                  <option value="Plot">Plot</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Apartment">Apartment</option>
+                  {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </label>
               <label>
@@ -322,6 +344,22 @@ export default function Dashboard() {
               <textarea required rows={3} placeholder="Describe the property…" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
             </label>
 
+            <label>
+              <span>Google Maps link <small>(optional — overrides the auto map link)</small></span>
+              <input type="url" placeholder="https://maps.app.goo.gl/…" value={form.maps_url} onChange={e => setForm({ ...form, maps_url: e.target.value })} />
+            </label>
+
+            <div className="dash-form-row">
+              <label>
+                <span>Facebook link <small>(optional)</small></span>
+                <input type="url" placeholder="https://facebook.com/…" value={form.fb_url} onChange={e => setForm({ ...form, fb_url: e.target.value })} />
+              </label>
+              <label>
+                <span>Instagram link <small>(optional)</small></span>
+                <input type="url" placeholder="https://instagram.com/…" value={form.insta_url} onChange={e => setForm({ ...form, insta_url: e.target.value })} />
+              </label>
+            </div>
+
             <div className="dash-field">
               <span className="dash-field-label">Main Image</span>
               <label className="dash-dropzone">
@@ -369,6 +407,39 @@ export default function Dashboard() {
                         ? <video src={url} muted />
                         : <img src={url} alt="gallery" />}
                       <button type="button" className="dash-thumb-remove" onClick={() => removeExistingGalleryImage(url)} aria-label="Remove">×</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="dash-field">
+              <span className="dash-field-label">Document Images <small>(shown below the gallery on the property page)</small></span>
+              <label className="dash-dropzone">
+                <input type="file" accept="image/*" multiple onChange={e => setDocumentFiles(Array.from(e.target.files))} />
+                <div className="dash-dropzone-inner">
+                  <svg viewBox="0 0 24 24" className="dash-dz-icon" aria-hidden="true"><path d="M7 3h7l5 5v13H7zM14 3v5h5" /></svg>
+                  <span className="dash-dz-title">{documentFiles.length > 0 ? `${documentFiles.length} file(s) selected` : 'Click or drop document images'}</span>
+                  <span className="dash-dz-sub">Khata, RTC, survey sketch, approvals…</span>
+                </div>
+              </label>
+              {documentFiles.length > 0 && (
+                <div className="dash-newfiles">
+                  {documentFiles.map((f, i) => (
+                    <span className="dash-newfile-chip" key={i}>📄 {f.name}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {form.documents && form.documents.length > 0 && (
+              <div className="dash-gallery-thumbs">
+                <span className="dash-thumbs-label">Current documents</span>
+                <div className="dash-thumbs-grid">
+                  {form.documents.map((url) => (
+                    <div className="dash-thumb" key={url}>
+                      <img src={url} alt="document" />
+                      <button type="button" className="dash-thumb-remove" onClick={() => removeExistingDocument(url)} aria-label="Remove">×</button>
                     </div>
                   ))}
                 </div>

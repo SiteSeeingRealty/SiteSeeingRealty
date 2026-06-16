@@ -60,7 +60,7 @@ DEMO_BROKER/
 | `/about` | `About` | Static |
 | `/paperwork` | `Paperwork` | Static |
 | `/property/:id` | `PropertyDetails` | Looks up property by `id` from context |
-| `/dashboard74927` | `Dashboard` | **Hidden/obfuscated broker route**, gated by Supabase auth |
+| `/dashboard` | `Dashboard` | **Hidden/obfuscated broker route**, gated by Supabase auth |
 
 ## 5. Data Model — `plots` table
 
@@ -142,8 +142,8 @@ SUPABASE_DB_PASSWORD=<db password> supabase db push
 2. ✅ **`.gitignore`** — added; ignores `.env`, `node_modules/`, `dist/`, `.supabase/`, `.DS_Store`.
 3. ✅ **Map default center** — re-centered on Mysore `[12.2958, 76.6394]` in `App.jsx`.
 4. ✅ **Undefined image refs** — `IMAGES.main2mob` / `IMAGES.main3mob` replaced with existing desktop images in the mobile `<source>` fallbacks.
-5. ✅ **Contact form** — now persists submissions to the `inquiries` table; the broker views them under the **Inquiries** tab in `/dashboard74927`. (Email/SMS notification still a future enhancement.)
-6. **No listings yet** — the `plots` table is empty; add the first property via `/dashboard74927`.
+5. ✅ **Contact form** — now persists submissions to the `inquiries` table; the broker views them under the **Inquiries** tab in `/dashboard`. (Email/SMS notification still a future enhancement.)
+6. **No listings yet** — the `plots` table is empty; add the first property via `/dashboard`.
 7. Repo currently has **no commits**.
 
 ## 9. How to Run Locally
@@ -154,4 +154,4 @@ npm install
 npm run dev
 ```
 
-Visit `/` for the site and `/dashboard74927` for the broker dashboard.
+Visit `/` for the site and `/dashboard` for the broker dashboard.

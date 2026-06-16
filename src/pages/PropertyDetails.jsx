@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useProperties } from '../context/PropertyContext';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
+import { WHATSAPP_NUMBER } from '../App';
 
 const mapIcon = new L.DivIcon({
   className: 'custom-map-marker',
@@ -21,17 +22,40 @@ export default function PropertyDetails() {
 
   const property = properties.find(p => p.id === id);
   const gallery = Array.isArray(property?.gallery) ? property.gallery : [];
+  const documents = Array.isArray(property?.documents) ? property.documents : [];
 
-  const [lightboxIndex, setLightboxIndex] = useState(null);
-  const isOpen = lightboxIndex !== null;
+  // Lightbox can show either the gallery or the document images.
+  const [lightbox, setLightbox] = useState(null); // { items: string[], index: number }
+  const isOpen = lightbox !== null;
+  const lbItems = lightbox?.items ?? [];
 
-  const close = useCallback(() => setLightboxIndex(null), []);
+  const openLightbox = useCallback((items, index) => setLightbox({ items, index }), []);
+  const close = useCallback(() => setLightbox(null), []);
   const next = useCallback(() => {
-    setLightboxIndex((i) => (i === null ? i : (i + 1) % gallery.length));
-  }, [gallery.length]);
+    setLightbox((lb) => (lb === null ? lb : { ...lb, index: (lb.index + 1) % lb.items.length }));
+  }, []);
   const prev = useCallback(() => {
-    setLightboxIndex((i) => (i === null ? i : (i - 1 + gallery.length) % gallery.length));
-  }, [gallery.length]);
+    setLightbox((lb) => (lb === null ? lb : { ...lb, index: (lb.index - 1 + lb.items.length) % lb.items.length }));
+  }, []);
+
+  const handleShare = useCallback(async () => {
+    const url = window.location.href;
+    const shareData = { title: property?.title || 'Property', text: property?.title || '', url };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+    } catch {
+      // user cancelled or share failed — fall through to copy
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard');
+    } catch {
+      window.prompt('Copy this link:', url);
+    }
+  }, [property?.title]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -79,17 +103,6 @@ export default function PropertyDetails() {
         <div className="pd-col pd-main">
           <h2>About this property</h2>
           <p>{property.description}</p>
-
-          {property.documents && property.documents.length > 0 && (
-            <div className="pd-docs">
-              <h3>Verified Paperwork</h3>
-              <ul>
-                {property.documents.map((doc, i) => (
-                  <li key={i}><a href="#" className="link-flash">📄 {doc}</a></li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
 
         <div className="pd-col pd-sidebar">
@@ -100,8 +113,49 @@ export default function PropertyDetails() {
               <Marker position={[property.lat, property.lng]} icon={mapIcon} />
             </MapContainer>
           </div>
-          <button className="button pd-contact">Inquire Now</button>
-          <a href={`https://www.google.com/maps/search/?api=1&query=${property.lat},${property.lng}`} target="_blank" rel="noreferrer" className="button pd-contact" style={{marginTop: '15px', display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', border: '1px solid var(--c2)', color: 'var(--c2)'}}>Open in Google Maps</a>
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hi, I'm interested in "${property.title}". ${window.location.href}`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="button pd-contact"
+            style={{ display: 'flex', justifyContent: 'center' }}
+          >
+            Chat on WhatsApp
+          </a>
+          <a
+            href={property.maps_url || `https://www.google.com/maps/search/?api=1&query=${property.lat},${property.lng}`}
+            target="_blank"
+            rel="noreferrer"
+            className="button pd-contact"
+            style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', border: '1px solid var(--c2)', color: 'var(--c2)' }}
+          >
+            Open in Google Maps
+          </a>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="button pd-contact"
+            style={{ marginTop: '15px', display: 'flex', justifyContent: 'center', backgroundColor: 'transparent', border: '1px solid var(--c2)', color: 'var(--c2)' }}
+          >
+            Share this property
+          </button>
+
+          {(property.fb_url || property.insta_url) && (
+            <div className="pd-social">
+              {property.fb_url && (
+                <a href={property.fb_url} target="_blank" rel="noreferrer" className="pd-social-link" aria-label="Facebook">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z" /></svg>
+                  Facebook
+                </a>
+              )}
+              {property.insta_url && (
+                <a href={property.insta_url} target="_blank" rel="noreferrer" className="pd-social-link" aria-label="Instagram">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23a3.7 3.7 0 0 1-.9 1.38c-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 3.24a6.6 6.6 0 1 0 0 13.2 6.6 6.6 0 0 0 0-13.2zm0 10.88a4.28 4.28 0 1 1 0-8.56 4.28 4.28 0 0 1 0 8.56zm6.85-11.13a1.54 1.54 0 1 1-3.08 0 1.54 1.54 0 0 1 3.08 0z" /></svg>
+                  Instagram
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -110,7 +164,7 @@ export default function PropertyDetails() {
           <h2>Gallery</h2>
           <div className="pd-gallery-grid">
             {gallery.map((url, i) => (
-              <button key={i} className="pd-gallery-item" onClick={() => setLightboxIndex(i)} aria-label={`Open media ${i + 1}`}>
+              <button key={i} className="pd-gallery-item" onClick={() => openLightbox(gallery, i)} aria-label={`Open media ${i + 1}`}>
                 {isVideo(url) ? (
                   <>
                     <video src={url} muted playsInline preload="metadata" />
@@ -125,24 +179,37 @@ export default function PropertyDetails() {
         </div>
       )}
 
+      {documents.length > 0 && (
+        <div className="holder pd-gallery pd-documents">
+          <h2>Documents</h2>
+          <div className="pd-gallery-grid">
+            {documents.map((url, i) => (
+              <button key={i} className="pd-gallery-item" onClick={() => openLightbox(documents, i)} aria-label={`Open document ${i + 1}`}>
+                <img src={url} alt={`${property.title} document ${i + 1}`} loading="lazy" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {isOpen && (
         <div className="pd-lightbox" onClick={close}>
           <button className="pd-lb-close" onClick={close} aria-label="Close">×</button>
 
-          {gallery.length > 1 && (
+          {lbItems.length > 1 && (
             <button className="pd-lb-arrow pd-lb-prev" onClick={(e) => { e.stopPropagation(); prev(); }} aria-label="Previous">‹</button>
           )}
 
           <div className="pd-lb-stage" onClick={(e) => e.stopPropagation()}>
-            {isVideo(gallery[lightboxIndex]) ? (
-              <video src={gallery[lightboxIndex]} controls autoPlay className="pd-lb-media" />
+            {isVideo(lbItems[lightbox.index]) ? (
+              <video src={lbItems[lightbox.index]} controls autoPlay className="pd-lb-media" />
             ) : (
-              <img src={gallery[lightboxIndex]} alt={`${property.title} ${lightboxIndex + 1}`} className="pd-lb-media" />
+              <img src={lbItems[lightbox.index]} alt={`${property.title} ${lightbox.index + 1}`} className="pd-lb-media" />
             )}
-            <div className="pd-lb-counter">{lightboxIndex + 1} / {gallery.length}</div>
+            <div className="pd-lb-counter">{lightbox.index + 1} / {lbItems.length}</div>
           </div>
 
-          {gallery.length > 1 && (
+          {lbItems.length > 1 && (
             <button className="pd-lb-arrow pd-lb-next" onClick={(e) => { e.stopPropagation(); next(); }} aria-label="Next">›</button>
           )}
         </div>
