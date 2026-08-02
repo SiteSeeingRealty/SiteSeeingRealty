@@ -24,6 +24,18 @@ export default function PropertyDetails() {
   const gallery = Array.isArray(property?.gallery) ? property.gallery : [];
   const documents = Array.isArray(property?.documents) ? property.documents : [];
 
+  // Spec rows come from the individual dashboard fields. Blank ones are dropped
+  // so older listings that predate these columns render exactly as before.
+  const specs = [
+    { label: 'Site No', value: property?.site_no },
+    { label: 'Dimension', value: property?.size },
+    { label: 'Facing', value: property?.facing },
+    { label: 'Location', value: property?.location_text },
+    { label: 'Price', value: property?.price },
+    { label: 'Contact', value: property?.contact, href: property?.contact ? `tel:${property.contact}` : null },
+    { label: 'Google Location', value: property?.maps_url ? 'View on Google Maps' : '', href: property?.maps_url }
+  ].filter(s => s.value);
+
   // Lightbox can show either the gallery or the document images.
   const [lightbox, setLightbox] = useState(null); // { items: string[], index: number }
   const isOpen = lightbox !== null;
@@ -102,7 +114,22 @@ export default function PropertyDetails() {
       <div className="holder pd-content">
         <div className="pd-col pd-main">
           <h2>About this property</h2>
-          <p>{property.description}</p>
+          {property.description && <p>{property.description}</p>}
+
+          {specs.length > 0 && (
+            <dl className="pd-specs">
+              {specs.map(({ label, value, href }) => (
+                <div className="pd-spec-row" key={label}>
+                  <dt>{label}</dt>
+                  <dd>
+                    {href
+                      ? <a href={href} target={href.startsWith('tel:') ? undefined : '_blank'} rel="noreferrer">{value}</a>
+                      : value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
 
         <div className="pd-col pd-sidebar">

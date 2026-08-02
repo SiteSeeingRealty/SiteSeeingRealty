@@ -8,7 +8,8 @@ export const PROPERTY_TYPES = ['Site', 'Villa', 'Apartment', 'Agricultural Land'
 const EMPTY_FORM = {
   title: '', type: 'Site', city: '', size: '', price: '',
   lat: '', lng: '', image: '', description: '', gallery: [],
-  documents: [], fb_url: '', insta_url: '', maps_url: ''
+  documents: [], fb_url: '', insta_url: '', maps_url: '',
+  site_no: '', facing: '', location_text: '', contact: ''
 };
 
 const DEFAULT_CITIES = ['Mysore', 'Bangalore'];
@@ -126,7 +127,11 @@ export default function Dashboard() {
         documents,
         fb_url: form.fb_url.trim(),
         insta_url: form.insta_url.trim(),
-        maps_url: form.maps_url.trim()
+        maps_url: form.maps_url.trim(),
+        site_no: form.site_no.trim(),
+        facing: form.facing.trim(),
+        location_text: form.location_text.trim(),
+        contact: form.contact.trim()
       };
 
       if (editingId) {
@@ -168,7 +173,11 @@ export default function Dashboard() {
       documents: Array.isArray(p.documents) ? p.documents : [],
       fb_url: p.fb_url || '',
       insta_url: p.insta_url || '',
-      maps_url: p.maps_url || ''
+      maps_url: p.maps_url || '',
+      site_no: p.site_no || '',
+      facing: p.facing || '',
+      location_text: p.location_text || '',
+      contact: p.contact || ''
     });
     setImageFile(null);
     setGalleryFiles([]);
@@ -278,8 +287,19 @@ export default function Dashboard() {
                 </select>
               </label>
               <label>
-                <span>Size</span>
-                <input required type="text" placeholder="e.g. 10,000 sqft" value={form.size} onChange={e => setForm({ ...form, size: e.target.value })} />
+                <span>Site No <small>(optional)</small></span>
+                <input type="text" placeholder="e.g. 143" value={form.site_no} onChange={e => setForm({ ...form, site_no: e.target.value })} />
+              </label>
+            </div>
+
+            <div className="dash-form-row">
+              <label>
+                <span>Dimension / Size</span>
+                <input required type="text" placeholder="e.g. 30'x40'" value={form.size} onChange={e => setForm({ ...form, size: e.target.value })} />
+              </label>
+              <label>
+                <span>Facing <small>(optional)</small></span>
+                <input type="text" placeholder="e.g. South" value={form.facing} onChange={e => setForm({ ...form, facing: e.target.value })} />
               </label>
             </div>
 
@@ -324,9 +344,20 @@ export default function Dashboard() {
             </label>
 
             <label>
-              <span>Price</span>
-              <input required type="text" placeholder="e.g. ₹50L" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} />
+              <span>Location <small>(optional — full address line)</small></span>
+              <input type="text" placeholder="e.g. KBL Silicon City, 100 feet from KRS main road, beside Infosys, Mysore" value={form.location_text} onChange={e => setForm({ ...form, location_text: e.target.value })} />
             </label>
+
+            <div className="dash-form-row">
+              <label>
+                <span>Price</span>
+                <input required type="text" placeholder="e.g. ₹4500/- per sqft" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} />
+              </label>
+              <label>
+                <span>Contact <small>(optional)</small></span>
+                <input type="tel" placeholder="e.g. 09886048471" value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} />
+              </label>
+            </div>
 
             <div className="dash-form-row">
               <label>
@@ -340,8 +371,8 @@ export default function Dashboard() {
             </div>
 
             <label>
-              <span>Description</span>
-              <textarea required rows={3} placeholder="Describe the property…" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
+              <span>Description <small>(optional — the details above already show as a spec list)</small></span>
+              <textarea rows={3} placeholder="Any extra notes about the property…" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} />
             </label>
 
             <label>

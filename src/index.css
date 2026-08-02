@@ -178,76 +178,32 @@ h2 {
   z-index: 500;
 }
 
-.loader::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 110%;
-  content: '';
-  background: url('https://tref.digitaldesignnyc.co/wp-content/uploads/2023/12/slide1.jpeg') 50% 50% no-repeat;
-  background-size: cover;
-}
-
 .loader-bg {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/images/key-bg.svg') 50% 50% no-repeat;
-  background-size: cover;
-  transition: transform 2s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
 }
 
-.loader.animate .loader-bg {
-  transform: scale(22);
+.loader-logo {
+  width: clamp(180px, 22vw, 380px);
+  max-width: 70vw;
+  height: auto;
+  transition: transform 2s ease-in, opacity 1.2s ease-in;
+}
+
+.loader.animate .loader-logo {
+  transform: scale(18);
+  opacity: 0;
 }
 
 .loader.hide {
   display: none;
-}
-
-.loader-box {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: clamp(70px, 6.25vw, 120px);
-  width: clamp(300px, 23vw, 440px);
-  text-align: center;
-  font-size: var(--sub);
-  font-weight: 400;
-  line-height: 150%;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  transition: transform 2s ease-in;
-}
-
-.loader-key-wrap {
-  overflow: hidden;
-  margin: clamp(16px, 2.1vw, 40px) 0 0;
-}
-
-.loader-key {
-  width: clamp(48px, 6.6vw, 126px);
-  height: clamp(15px, 2.1vw, 40px);
-  margin: 0 auto;
-  background: url('/images/key.svg') 50% 50% no-repeat;
-  background-size: contain;
-  transition: transform 0.5s cubic-bezier(0.12, 0, 0.39, 0);
-}
-
-.line {
-  overflow: hidden;
-}
-
-.line-inner {
-  transition: transform 0.5s cubic-bezier(0.12, 0, 0.39, 0);
-}
-
-.loader.animate .line-inner,
-.loader.animate .loader-key {
-  transform: translateY(100%);
 }
 
 /* ===== HEADER ===== */
@@ -1574,6 +1530,47 @@ h2 {
   opacity: 0.8;
   margin-bottom: 30px;
   font-size: 18px;
+}
+
+.pd-specs {
+  margin: 0 0 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.pd-spec-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.pd-spec-row dt {
+  flex: 0 0 150px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.pd-spec-row dd {
+  flex: 1;
+  min-width: 200px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.pd-spec-row dd a {
+  color: var(--c2);
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .pd-spec-row dt {
+    flex-basis: 100%;
+  }
 }
 
 .pd-docs h3 {

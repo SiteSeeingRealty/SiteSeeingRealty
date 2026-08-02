@@ -17,7 +17,11 @@ CREATE TABLE IF NOT EXISTS public.plots (
     documents TEXT[],   -- uploaded document-image URLs
     fb_url TEXT,
     insta_url TEXT,
-    maps_url TEXT
+    maps_url TEXT,
+    site_no TEXT,       -- e.g. "143"
+    facing TEXT,        -- e.g. "South"
+    location_text TEXT, -- full address line shown on the property page
+    contact TEXT        -- phone number shown on the property page
 );
 
 -- Explicitly expose the table to the Data API (PostgREST / supabase-js).

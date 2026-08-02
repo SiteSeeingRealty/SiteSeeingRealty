@@ -75,8 +75,8 @@ function Loader({ onDone }) {
   }, [onDone])
   return (
     <div className="loader" ref={ref}>
-      <div className="loader-bg" />
-      <div className="loader-box">
+      <div className="loader-bg">
+        <img src={LOGO} alt="SiteSeeing Realty" className="loader-logo" />
       </div>
     </div>
   )
