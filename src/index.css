@@ -1111,11 +1111,24 @@ h2 {
 
 .footer-copy {
   display: flex;
+  flex-wrap: wrap;
   gap: clamp(10px, 2.08vw, 40px);
   color: #000000;
   font-size: clamp(12px, 0.83vw, 16px);
   line-height: 150%;
   opacity: 0.5;
+}
+
+/* RERA registration is a required disclosure — give it its own line so it
+   reads as a statement rather than another footer link. */
+.footer-rera {
+  flex-basis: 100%;
+  letter-spacing: 0.5px;
+}
+
+.footer-rera span {
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .privacy {
@@ -1530,6 +1543,32 @@ h2 {
   opacity: 0.8;
   margin-bottom: 30px;
   font-size: 18px;
+}
+
+/* RERA registration callout on the About and Paperwork pages. */
+.rera-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 40px;
+  padding: 18px 22px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-left: 3px solid var(--c2);
+}
+
+.rera-callout-label {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.rera-callout-value {
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  word-break: break-word;
 }
 
 .pd-specs {

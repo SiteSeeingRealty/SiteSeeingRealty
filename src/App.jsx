@@ -23,6 +23,10 @@ gsap.registerPlugin(ScrollTrigger)
 // Client WhatsApp number (international format, no symbols) for wa.me links.
 export const WHATSAPP_NUMBER = '919886048471'
 
+// Karnataka RERA agent registration number. Required disclosure — keep it here
+// as the single source so every page shows the same value.
+export const RERA_NUMBER = 'PRM/KA/RERA/1268/378/AG/260713/007497'
+
 const LOGO = logoImg
 const SLIDES = [
   { desk: heroImg1, mob: heroImg1, alt: 'Luxury apartment building exterior' },
@@ -570,6 +574,7 @@ export default function App() {
             </div>
             <div className="footer-bottom">
               <div className="footer-copy">
+                <div className="footer-rera">KA RERA Agent Reg. No: <span>{RERA_NUMBER}</span></div>
                 <div className="copyright">Copyright &copy; 2026 SiteSeeing Realty&reg; All rights reserved.</div>
                 <div className="privacy">
                   <a href="/privacy-policy/">Privacy Policy</a>

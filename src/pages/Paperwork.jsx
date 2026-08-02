@@ -1,3 +1,5 @@
+import { RERA_NUMBER } from '../App';
+
 export default function Paperwork() {
   return (
     <div className="holder" style={{ paddingTop: '200px', minHeight: '70vh' }}>
@@ -12,6 +14,10 @@ export default function Paperwork() {
           <li>MUDA / DTCP Approved Layouts</li>
           <li>Clear Titles & Background Checks</li>
         </ul>
+        <div className="rera-callout">
+          <span className="rera-callout-label">Karnataka RERA Registered Agent</span>
+          <span className="rera-callout-value">{RERA_NUMBER}</span>
+        </div>
       </div>
     </div>
   );
