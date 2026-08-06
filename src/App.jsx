@@ -589,7 +589,6 @@ export default function App() {
                   <a href="/terms-and-conditions/">Terms and Conditions</a>
                 </div>
               </div>
-              <div className="footer-studio">Created with &hearts; by <a target="_blank" rel="noreferrer" href="https://ascension-ten.vercel.app">Ascension&reg;</a></div>
             </div>
           </div>
         </footer>

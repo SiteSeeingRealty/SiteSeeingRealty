@@ -1198,21 +1198,6 @@ h2 {
   color: #000000;
 }
 
-.footer-studio {
-  color: #000000;
-  font-size: clamp(12px, 0.83vw, 16px);
-  line-height: 150%;
-}
-
-.footer-studio a {
-  color: #000000;
-  text-decoration: none;
-}
-
-.footer-studio a:hover {
-  color: var(--c2);
-}
-
 /* ===== PROPERTY EXPLORER ===== */
 .property-explorer {
   padding: clamp(60px, 8.59vw, 160px) 0;
@@ -2808,10 +2793,6 @@ h2 {
 
   .footer-bottom {
     flex-direction: column-reverse;
-  }
-
-  .footer-studio {
-    margin: 0 0 8px;
   }
 
   .footer-copy {
