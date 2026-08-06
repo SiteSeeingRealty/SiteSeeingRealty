@@ -417,8 +417,10 @@ h2 {
   right: 0;
   z-index: 10;
   content: '';
-  height: clamp(200px, 22.9vw, 440px);
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.80) 25%, rgba(0, 0, 0, 0.00) 85%);
+  /* Tall enough to clear both headline lines + subheading, not just the
+     buttons/badge beneath them — the old 440px cap ran out above the text. */
+  height: clamp(360px, 40vw, 720px);
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.80) 20%, rgba(0, 0, 0, 0.55) 45%, rgba(0, 0, 0, 0.00) 90%);
   pointer-events: none;
 }
 
@@ -435,24 +437,27 @@ h2 {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: clamp(52px, 5.2vw, 100px);
+  bottom: clamp(24px, 2.4vw, 48px);
   z-index: 10;
 }
 
-/* Focused gradient behind the hero text for legibility */
+/* Focused gradient behind the hero text for legibility. Anchored to the same
+   bottom-left corner as the text block, but sized/shaped so the darkest part
+   of the gradient sits under the headline itself, not just the buttons below it. */
 .banner-text-shade {
   position: absolute;
   left: 0;
   bottom: 0;
   z-index: 8;
-  width: min(70%, 900px);
-  height: clamp(280px, 32vw, 560px);
+  width: min(78%, 980px);
+  height: clamp(420px, 44vw, 720px);
   pointer-events: none;
   background: radial-gradient(
-    ellipse 90% 100% at 0% 100%,
-    rgba(0, 0, 0, 0.72) 0%,
-    rgba(0, 0, 0, 0.45) 40%,
-    rgba(0, 0, 0, 0) 75%
+    ellipse 85% 100% at 0% 100%,
+    rgba(10, 12, 10, 0.78) 0%,
+    rgba(10, 12, 10, 0.60) 35%,
+    rgba(10, 12, 10, 0.28) 62%,
+    rgba(10, 12, 10, 0) 88%
   );
 }
 
@@ -493,6 +498,12 @@ h2 {
 .banner-block h1 {
   text-align: left;
   margin: 0 0 16px 0;
+  /* Override the site-wide gold shadow (tuned for cream sections) — over a
+     photo it needs a dark contact shadow instead: a tight layer to hold the
+     thin serif strokes, a soft layer to lift the whole line off the image. */
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.55),
+    0 6px 20px rgba(0, 0, 0, 0.45);
 }
 
 .banner-block .subheading {
@@ -510,6 +521,53 @@ h2 {
 
 .banner-block .button {
   margin: 0;
+}
+
+/* RERA proof badge in the hero. Sits over photography, so it carries its own
+   translucent panel rather than relying on the slide behind it. */
+.banner-rera {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 9px 16px 9px 13px;
+  color: #ffffff;
+  font-size: clamp(11px, 0.78vw, 13.5px);
+  line-height: 1.45;
+  letter-spacing: 0.6px;
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.banner-rera svg {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.banner-rera strong {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .banner-rera {
+    align-items: flex-start;
+    letter-spacing: 0.3px;
+  }
+
+  .banner-rera strong {
+    white-space: normal;
+    word-break: break-word;
+  }
 }
 
 /* Slider arrows */
@@ -1545,6 +1603,44 @@ h2 {
   font-size: 18px;
 }
 
+/* RERA line above the explorer map — proof at the point where buyers browse. */
+.explorer-rera {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 22px 0 4px;
+  color: var(--c2);
+  font-size: clamp(12px, 0.83vw, 14px);
+  line-height: 1.5;
+  opacity: 0.75;
+}
+
+.explorer-rera svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--c2);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.explorer-rera strong {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 600px) {
+  .explorer-rera {
+    align-items: flex-start;
+  }
+
+  .explorer-rera strong {
+    word-break: break-word;
+  }
+}
+
 /* RERA registration callout on the About and Paperwork pages. */
 .rera-callout {
   display: flex;
@@ -2564,11 +2660,11 @@ h2 {
   }
 
   .banner-slider::before {
-    height: 320px;
+    height: 420px;
   }
 
   .banner-main {
-    bottom: 52px;
+    bottom: 24px;
   }
 
   .banner-block {

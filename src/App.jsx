@@ -153,6 +153,10 @@ function Banner({ visible }) {
               <a href="#properties" className="button" id="cta-explore" onClick={(e) => { e.preventDefault(); scrollToSection('properties') }}>Explore Properties</a>
               <a href="#join-section" className="button" id="cta-contact" onClick={(e) => { e.preventDefault(); scrollToSection('join-section') }}>Contact Us</a>
             </div>
+            <div className="banner-rera">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3.5v5.8c0 4.6-3.4 8.9-8 10.2-4.6-1.3-8-5.6-8-10.2V5.5L12 2z" /><path className="rera-tick" d="M8.5 12.2l2.4 2.4 4.6-4.9" /></svg>
+              <span>KA RERA Reg. No: <strong>{RERA_NUMBER}</strong></span>
+            </div>
           </div>
         </div>
       </div>
@@ -284,6 +288,10 @@ function PropertyExplorer() {
             </div>
           </div>
         )}
+        <div className="explorer-rera">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3.5v5.8c0 4.6-3.4 8.9-8 10.2-4.6-1.3-8-5.6-8-10.2V5.5L12 2z" /><path className="rera-tick" d="M8.5 12.2l2.4 2.4 4.6-4.9" /></svg>
+          <span>Every listing sourced by a Karnataka RERA registered agent — <strong>{RERA_NUMBER}</strong></span>
+        </div>
       </div>
 
       <div className="map-wrap">
