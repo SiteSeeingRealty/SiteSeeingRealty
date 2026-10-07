@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, useCallback, useMemo, Fragment } from 'rea
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, useMap } from 'react-leaflet'
+import KeylessTileLayer from './components/KeylessTileLayer'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -301,7 +302,7 @@ function PropertyExplorer() {
 
       <div className="map-wrap">
         <MapContainer center={[12.2958, 76.6394]} zoom={12} scrollWheelZoom={false} className="leaflet-map">
-          <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}" attribution="Tiles &copy; Esri &mdash; Esri, HERE, Garmin, OpenStreetMap contributors" maxZoom={19} />
+          <KeylessTileLayer />
           <FitBounds points={mappable.map(m => m.position)} />
           {mappable.map(({ property: p, position }) => (
             <Marker key={p.id} position={position} icon={priceIcon(p.price)}>

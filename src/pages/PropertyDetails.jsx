@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProperties } from '../context/PropertyContext';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, Marker } from 'react-leaflet';
+import KeylessTileLayer from '../components/KeylessTileLayer';
 import L from 'leaflet';
 import { WHATSAPP_NUMBER } from '../App';
 import { safeUrl } from '../utils/safeUrl';
@@ -150,7 +151,7 @@ export default function PropertyDetails() {
               <h3>Location</h3>
               <div className="pd-map">
                 <MapContainer center={position} zoom={14} scrollWheelZoom={false} style={{ width: '100%', height: '100%' }}>
-                  <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}" attribution="Tiles &copy; Esri &mdash; Esri, HERE, Garmin, OpenStreetMap contributors" maxZoom={19} />
+                  <KeylessTileLayer />
                   <Marker position={position} icon={mapIcon} />
                 </MapContainer>
               </div>
