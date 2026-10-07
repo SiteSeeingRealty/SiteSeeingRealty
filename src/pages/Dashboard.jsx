@@ -15,6 +15,19 @@ const EMPTY_FORM = {
 
 const DEFAULT_CITIES = ['Mysore', 'Bangalore'];
 
+// Browsers report an unreachable server as "Load failed" (Safari) or "Failed
+// to fetch" (Chrome). That almost always means the database is paused or
+// offline, not that the password is wrong, so say so.
+function friendlyAuthError(error) {
+  const message = error?.message || '';
+  const isNetwork = error?.name === 'AuthRetryableFetchError'
+    || /load failed|failed to fetch|networkerror|network request failed/i.test(message);
+  if (isNetwork) {
+    return 'Could not reach the server. The database may be waking up or paused. Please wait a minute and try again.';
+  }
+  return message || 'Login failed';
+}
+
 export default function Dashboard() {
   const { properties, addProperty, deleteProperty, editProperty } = useProperties();
   const [session, setSession] = useState(null);
@@ -75,9 +88,14 @@ export default function Dashboard() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) alert(error.message);
-    setAuthLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) alert(friendlyAuthError(error));
+    } catch (error) {
+      alert(friendlyAuthError(error));
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleLogout = async () => {
